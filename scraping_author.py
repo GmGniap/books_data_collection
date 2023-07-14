@@ -1,5 +1,6 @@
 import requests
 import re
+import json
 from bs4 import BeautifulSoup
 
 
@@ -18,10 +19,10 @@ def request_author(url):
         for oc in all_onclick:
             id_name_dict = {}
             id_tag = oc['onclick']
-            id = re.match(r"^.*\(\'(.*)\'\)$", id_tag).group(1)
-            id_name_dict['id'] = id
-            name_tag = oc.find("h5").text
-            id_name_dict['name'] =name_tag
+            id = re.match(r"^.*\(\'(.*)\'\)$", id_tag).group(1).strip()
+            id_name_dict["id"] = id
+            name_tag = oc.find("h5").text.strip()
+            id_name_dict["name"] =name_tag
             author_result.append(id_name_dict)
         return author_result
     else:
@@ -40,5 +41,6 @@ for index in range(1,84):
     print(f"Done for {index} with {len(all_authors)}")
 
 print(len(all_authors))
-with open("all_authors.json", "w", encoding='utf-8') as out:
-    out.write(str(all_authors))
+with open("all_authors_final.json", "w", encoding='utf-8') as out:
+    json.dump(all_authors, out, ensure_ascii=False)
+    

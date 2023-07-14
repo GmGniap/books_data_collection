@@ -1,6 +1,7 @@
 # new added items
 environment/
 *.json
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
