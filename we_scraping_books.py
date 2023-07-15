@@ -3,7 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import sqlite3
 
+conn = sqlite3.connect('we.db')
 
 def request_books(id):
     index = 1
@@ -82,10 +84,16 @@ with open('./all_authors_final.json', 'r', encoding='utf-8') as f:
         books = request_books(id) ## return type is List of Dictionaries
         print(f"ID:{id} -> Length:{len(books)}")
         
+        ## append to sqlite as backup
+        loop_df = pd.DataFrame(books)
+        loop_df.to_sql('books_data', conn, if_exists='append', index=False)
+        
         ## no more append in Pandas new version, need to use concat
-        book_df = pd.concat([book_df, pd.DataFrame(books)], ignore_index=True)
+        book_df = pd.concat([book_df, loop_df], ignore_index=True)
         book_df['check_id'] = id
         book_df['check_name'] = author["name"]
+        print(f"Finished for {id} : {book_df.shape}")
+        
         
     print(book_df.shape)
     print(book_df.columns)
