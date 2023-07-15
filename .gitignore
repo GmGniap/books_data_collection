@@ -3,6 +3,7 @@ environment/
 *.json
 *.csv
 *.db
+links.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
