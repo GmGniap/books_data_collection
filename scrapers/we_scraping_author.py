@@ -4,16 +4,9 @@ import json
 from bs4 import BeautifulSoup
 from links import WEinfo
 from datetime import datetime
-import logging
-import os
+from support_functions import set_logger, write_json_file
 
 info = WEinfo(0)
-
-# logging.basicConfig(
-#     filename="log_files/we.log",
-#     format="%(asctime)s|%(levelname)s|%(message)s",
-#     datefmt="%d-%b-%y %H:%M"
-# )
 
 
 ## Request function from author url
@@ -63,24 +56,9 @@ def get_author_data():
         # print(f"Page index can be out of range : {e}")
         log.error(f"Page index out of range : {e}")
     finally:
-        with open(
-            f"json_files/all_authors_{get_today}.json", "w", encoding="utf-8"
-        ) as out:
-            json.dump(all_authors, out, ensure_ascii=False)
+        write_json_file(f"json_files/all_authors_{get_today}", all_authors)
     log.info(f"Total : {len(all_authors)} for {get_today}")
     print("Finished!")
-
-
-def set_logger():
-    log = logging.getLogger(__name__)
-    log.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        fmt="%(asctime)s|%(levelname)s - %(message)s", datefmt="%d-%b-%Y %H:%M"
-    )
-    fh = logging.FileHandler("log_files/we.log", "a")
-    fh.setFormatter(formatter)
-    log.addHandler(fh)
-    return log
 
 
 if __name__ == "__main__":
